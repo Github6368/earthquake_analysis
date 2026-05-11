@@ -134,10 +134,126 @@ dbutils.fs.put(
 ## Now, let' create another notebook to have our bronze layer ready
 ## Bronze_consumption Notebook
 ```
+# Step - I
 # Let's create directory using the dbutils.fs.mkdirs() method
 # Checkpoint directory for structured streaming
 # To create a directory
+# Start from #5, https://my.dataengineeracademy.com/mod/url/view.php?id=1694
 
 dbutils.fs.mkdirs("/Volumes/lakehouse/01_raw/raw/_checkpoint")
 ```
+
+```
+# Step - II
+# Let's create a variable for the checkpoint directory
+source_path = "/Volumes/lakehouse/01_raw/raw/"
+checkpoint_path  = "lakehouse.`01_raw`/_checkpoint"
+
+```
+```
+# Step - III
+# First, infer schema from batch read
+sample_df = spark.read.option('inferSchema','true').json(source_path+"/*.json")
+inferred_schema = sample_df.schema
+
+# Now use the schema for streaming read
+df = (spark.readStream
+        .format('json')
+        .schema(inferred_schema)
+        .load(source_path+"/*.json"))
+
+# To see the schema
+# However, when the file is too big, it is hard to see the schema
+# So, we can use the following code to see the schema
+# 
+      
+# df.display()
+```
+```
+# Step - IV
+# Now, let's run a smaller file to see the schema
+# Let's run the following code to see the schema
+# 
+df = spark.read.option('inferSchema','true').json(source_path+"/*.json")
+df.printSchema()
+# Let's create a function to read the data
+# Let's use the following code to read the data
+# 
+df = (spark
+      .read
+      .option('inferSchema','true')
+      .json(path='https://my.dataengineeracademy.com/mod/url/view.php?id=1694'))
+```
+
+```
+# Step - V
+# As we got the schema, we can create a schema
+df.schema
+
+```
+
+```
+# Step - VI
+# Let's format the schema
+from pyspark.sql.types import StructType
+
+def format_schema(schema):
+    return schema.simpleString()
+
+formatted_schema = format_schema(df.schema)
+print(formatted_schema)
+
+```
+```
+# Step - VII
+# Let's use the following code to see the
+df.schema
+
+```
+```
+# Step - VIII
+# Let's create the schema
+import pyspark as F
+from pyspark.sql.types import *
+
+df = (spark.readStream
+      .format("json")
+      .schema(df.schema)
+      .load(source_path+"/*.json"))
+```
+
+```
+# Step IX
+# Let's write the data now
+import pyspark as F
+from pyspark.sql.types import *
+
+# Infer schema from batch read
+sample_df = spark.read.option('inferSchema','true').json(source_path+"/*.json")
+inferred_schema = sample_df.schema
+
+# Create streaming DataFrame
+streaming_df = (spark.readStream
+      .format("json")
+      .schema(inferred_schema)
+      .load(source_path+"/*.json"))
+
+# Write the stream
+query = (streaming_df.writeStream
+      .option("checkpointLocation", "/Volumes/lakehouse/01_raw/raw/_checkpoint")
+      .trigger(availableNow=True)
+      .toTable('lakehouse.02_bronze.earthquakes'))
+```
+
+```
+```
+
+
+
+
+
+
+
+
+
 
