@@ -12,7 +12,7 @@ earthquake_analysis/
 │   └── earthquake_analysis_project_flow.png
 │
 ├── src/
-│   ├── ingestion/
+│   ├── Raw_ingestion/
 │   ├── bronze/
 │   ├── silver/
 │   ├── gold/
