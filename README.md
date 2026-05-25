@@ -6,11 +6,6 @@ This is a repo for databricks project on earthquake analysis
 ```
 earthquake_analysis/
 │
-├── architecture/
-│   ├── architecture.excalidraw
-│   ├── earthquake_analysis_architecture.png
-│   └── earthquake_analysis_project_flow.png
-│
 ├── src/
 │   ├── Raw_ingestion/
 │   ├── Bronze_consumtption/
