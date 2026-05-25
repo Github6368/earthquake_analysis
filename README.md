@@ -188,7 +188,8 @@ df = (spark
 ```
 # Step - V
 # As we got the schema, we can create a schema
-df.schema
+df = spark.read.option('inferSchema','true').json(source_path+"/*.json")
+display(df)
 
 ```
 
